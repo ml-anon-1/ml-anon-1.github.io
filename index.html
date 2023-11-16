@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DyST</title>
+
+    <link rel="stylesheet" href="./static/css/main.css" />
+
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container is-max-desktop">
+    <div class="columns is-centered">
+    <div class="column has-text-centered">
+
+    <section class="section" id="cam-ood">
+        <h2 class="title">Generalization to Novel Camera Trajectories</h2>
+        <center>
+            <video width="80%"  alt="Teaser Video" autoplay muted loop>
+            <source src="data/camera-ood.mp4" type="video/mp4" />
+            </video>
+        </center>
+        <br />
+    
+        To showcase the generalization to different camera movements, we generate each video in the 
+        following manner: the first part of the video is rendered using the camera and dynamics control 
+        latents as inferred by the camera & dynamics estimators on each video frame (as shown in Figure 4
+        and described in Section 4.1). Then, we freeze the dynamics control latent and apply a series 
+        of manipulations to the camera control latent that result in panning, zooming, and circular 
+        camera motions, while the video content is frozen. We obtain these manipulations from several 
+        synthetic scenes similar to DySO that were rendered with the corresponding camera paths setup 
+        by hand. We obtain the camera control latents from those synthetic scenes using the camera 
+        estimator, and add them to the control latent on the real video to transfer the camera motion 
+        from the synthetic dataset to the real video. Finally, we resume playback of the video by 
+        rendering using camera & dynamics control latents from the video again.
+    </section>
+
+    </div>
+    </div>
+    </div>
+
+  </body>
+</html>
