@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="./static/css/main.css" />
 
     <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/jquery-3.6.1.min.js"></script>
+    <script src="./static/js/handlebars-v4.7.7.js"></script>
+    <script src="./static/js/main.js"></script>
   </head>
 
   <body>
@@ -25,17 +28,96 @@
         </center>
         <br />
     
-        To showcase the generalization to different camera movements, we generate each video in the 
-        following manner: the first part of the video is rendered using the camera and dynamics control 
-        latents as inferred by the camera & dynamics estimators on each video frame (as shown in Figure 4
-        and described in Section 4.1). Then, we freeze the dynamics control latent and apply a series 
-        of manipulations to the camera control latent that result in panning, zooming, and circular 
-        camera motions, while the video content is frozen. We obtain these manipulations from several 
-        synthetic scenes similar to DySO that were rendered with the corresponding camera paths setup 
-        by hand. We obtain the camera control latents from those synthetic scenes using the camera 
-        estimator, and add them to the control latent on the real video to transfer the camera motion 
-        from the synthetic dataset to the real video. Finally, we resume playback of the video by 
-        rendering using camera & dynamics control latents from the video again. 
+        To showcase the generalization to novel camera movements, we generate each video in the following manner: the first part of the video is rendered using the camera and dynamics control latents as inferred by the latent pose estimators on each video frame (as shown in Fig. 4 and described in Sec. 4.1). Then, we freeze the dynamics control latent and apply a series of manipulations to the camera control latent that result in panning, zooming, and circular camera motions, while the video content is frozen. We note that the rotating motion is novel and does not exist in either of the training datasets DySO or SSv2. We obtain these manipulations from several synthetic scenes similar to DySO that were rendered with the corresponding camera paths setup by hand. We obtain the camera control latents from those synthetic scenes using the camera estimator, and add them to the control latent on the real video to transfer the camera motion from the synthetic dataset to the real video. Finally, we resume playback of the rendered video by using camera & dynamics control latents from the original video again.
+    </section>
+
+    <section class="section" id="latent-distances">
+        <h2 class="title">Latent Distances on Real-World Videos</h2>
+        We extend Figure 5, right, with more examples. We plot frame-to-frame L2 distances, for camera (left) and dynamics control latents (right).
+
+        <table class="table center">
+            <tbody id="dists-tbody">
+                <script id="dists-row" type="text/x-handlebars-template">
+                {{#each ex}}
+                <tr>
+                    <td style="vertical-align: middle; width: 40%;">
+                        <video style="width:70%;" autoplay loop controls muted>
+                            <source src="data/latent_dists/{{this}}_vid.mp4" type="video/mp4">
+                        </video>
+                    </td>
+                    <td style="vertical-align: middle; width: 60%;">
+                        <img src="data/latent_dists/{{this}}_dists.png"/>
+                    </td>
+                </tr>
+                {{/each}}
+                </script>
+                <script>
+                    fillTemplate({
+                      templateId: "dists-row",
+                      dstId: "dists-tbody",
+                      data: {
+                        ex: ["kamvid_1", "kamvid_8", "ssv2_01", "ssv2_04", "ssv2_23"],
+                      },
+                    });
+                </script>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="section" id="nerf-comparison">
+        <h2 class="title">Comparison to Robust DynRF on SSv2</h2>
+
+        <p>
+            We compare DyST to <a href="https://robust-dynrf.github.io/">Robust DynRF</a>, 
+            a state-of-the-art NeRF method for dynamic videos without camera poses.
+            For DyST, we apply the trained model to the first, middle and last frame of the video 
+            to compute a scene representation, and generate all frames using control latents estimated from those frames.
+            For Robust DynRF, we show renderings after training the model on the full video.
+            Note that in contrast to Robust DynRF, DyST has not seen any of the videos during training.
+            On these videos, Robust DynRF achieves an average PSNR of 26.1 and LPIPS of 0.34.
+            In contrast, DyST achieves a slightly better PSNR of 27.9 and LPIPS of 0.18.
+        </p>
+        <br />
+        <table class="table center">
+            <tbody id="nerf-tbody">
+                <tr>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">Robust DynRF</td>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">DyST</td>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">Video</td>
+                </tr>
+
+                <script id="nerf-row" type="text/x-handlebars-template">
+                {{#each ex}}
+                <tr>                    
+                    <td style="vertical-align: middle;">
+                        <video autoplay loop controls muted>
+                            <source src="data/recon/{{this}}_robdynrf.mp4" type="video/mp4">
+                        </video>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <video autoplay loop controls muted>
+                            <source src="data/recon/{{this}}_dyst.mp4" type="video/webm">
+                        </video>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <video autoplay loop controls muted>
+                            <source src="data/recon/{{this}}_vid.mp4" type="video/mp4">
+                        </video>
+                    </td>
+                </tr>
+                {{/each}}
+                </script>
+                <script>
+                    fillTemplate({
+                      templateId: "nerf-row",
+                      dstId: "nerf-tbody",
+                      data: {
+                        ex: ["00_ssv2", "01_ssv2", "02_ssv2", "03_ssv2", "04_ssv2", "05_ssv2"],
+                      },
+                    });
+                </script>
+            </tbody>
+        </table>
     </section>
 
     </div>
