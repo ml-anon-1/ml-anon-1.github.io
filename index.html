@@ -75,7 +75,7 @@
             For Robust DynRF, we show renderings after training the model on the full video.
             Note that in contrast to Robust DynRF, DyST has not seen any of the videos during training.
             On these videos, Robust DynRF achieves an average PSNR of 26.1 and LPIPS of 0.34.
-            In contrast, DyST achieves a slightly better PSNR of 27.9 and LPIPS of 0.18.
+            In contrast, DyST achieves a significantly better PSNR of 27.9 and LPIPS of 0.18.
         </p>
         <br />
         <table class="table center">
@@ -120,9 +120,64 @@
         </table>
     </section>
 
-    </div>
-    </div>
-    </div>
+    
+    <section class="section" id="dyso">
+        <h2 class="title">DySO</h2>
+        <br />
+        <table class="table center">
+            <tbody id="dyso-tbody">
+                <tr>
+                    <td colspan=3 style="vertical-align: middle; font-weight: bold; text-decoration: underline;">Input Views</td>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">Cam. Est.</td>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">Dyn. Est.</td>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">Pred</td>
+                    <td style="vertical-align: middle; font-weight: bold; text-decoration: underline;">GT</td>
+                </tr>
+                <script id="dyso-row" type="text/x-handlebars-template">
+                {{#each ex}}
+                <tr>
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_inp_0.png"/>
+                    </td>    
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_inp_1.png"/>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_inp_2.png"/>
+                    </td>
 
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_cam_inp.png"/>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_dyn_inp.png"/>
+                    </td>
+
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_pred.png"/>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <img src="data/dyso/{{this}}_gt.png"/>
+                    </td>
+                </tr>
+                {{/each}}
+                </script>
+                <script>
+                    fillTemplate({
+                      templateId: "dyso-row",
+                      dstId: "dyso-tbody",
+                      data: {
+                        ex: ["01", "02", "03", "04", "05", "06", "07", "08", "09", 
+                             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"],
+                      },
+                    });
+                </script>
+            </tbody>
+        </table>
+    </section>
+
+    </div>
+    </div>
+    </div>
   </body>
 </html>
